@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Chi Tiêu Cá Nhân</title>
+    <style>
+        /* CSS: Giao diện sạch sẽ, chuyên nghiệp */
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #1a73e8; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        
+        button { width: 100%; padding: 12px; background-color: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        button:hover { background-color: #1557b0; }
+
+        .summary { margin-top: 20px; padding: 15px; background: #e8f0fe; border-radius: 8px; text-align: center; }
+        .summary span { font-size: 20px; font-weight: bold; color: #d93025; }
+
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; }
+        .btn-delete { color: #d93025; cursor: pointer; border: none; background: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>💰 Quản Lý Chi Tiêu</h2>
+    
+    <div class="form-group">
+        <label>Tên khoản chi:</label>
+        <input type="text" id="name" placeholder="Ví dụ: Mua trà sữa, Tiền gửi xe...">
+    </div>
+    <div class="form-group">
+        <label>Số tiền (VNĐ):</label>
+        <input type="number" id="amount" placeholder="Nhập số tiền...">
+    </div>
+    <button onclick="addExpense()">Thêm vào danh sách</button>
+
+    <div class="summary">
+        Tổng chi tiêu: <span id="total">0</span> VNĐ
+    </div>
+
+    <table id="expense-table">
+        <thead>
+            <tr>
+                <th>Tên</th>
+                <th>Số tiền</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="list">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    let totalMoney = 0;
+
+    function addExpense() {
+        const nameInput = document.getElementById('name');
+        const amountInput = document.getElementById('amount');
+        const list = document.getElementById('list');
+        const totalDisplay = document.getElementById('total');
+
+        if (nameInput.value === "" || amountInput.value === "") {
+            alert("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+
+        // 1. Cập nhật tổng tiền
+        const amount = parseInt(amountInput.value);
+        totalMoney += amount;
+        totalDisplay.innerText = totalMoney.toLocaleString();
+
+        // 2. Thêm dòng mới vào bảng
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${nameInput.value}</td>
+            <td>${amount.toLocaleString()} đ</td>
+            <td><button class="btn-delete" onclick="removeExpense(this, ${amount})">Xóa</button></td>
+        `;
+        list.appendChild(row);
+
+        // 3. Xóa trống ô nhập sau khi thêm
+        nameInput.value = "";
+        amountInput.value = "";
+    }
+
+    function removeExpense(btn, amount) {
+        // Xóa dòng khỏi bảng
+        btn.parentElement.parentElement.remove();
+        
+        // Trừ lại tiền vào tổng
+        totalMoney -= amount;
+        document.getElementById('total').innerText = totalMoney.toLocaleString();
+    }
+</script>
+
+</body>
+</html>
